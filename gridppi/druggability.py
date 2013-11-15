@@ -561,22 +561,18 @@ class OpenDX(Grid):
         return filename
 
 
-    def indeces(self, coords):
+    def indices(self, coords):
     	""" Takes a coordinate array of shape (n_atoms, 3) and
-    	returns the indeces of the voxels in self.array that would
+    	returns the indices of the voxels in self.array that would
     	contain those coordinates.
 
     	"""
-
-    	xmin,ymin,zmin = self.offset
-    	xmax,ymax,zmax = self.offset+(self.shape*self.spacing)
-    	for coord in coords:
-    		if (coord[0]<xmin or coord[0]>xmax or
-    			coord[1]<ymin or coord[1]>ymax or
-    			coord[2]<zmin or coord[2]>zmax):
-    			raise IndexError('Coordinate {0:s} is outside range of system'.format(coord))
+    	
+    	if (any(coords.min(0) < self.offset) or
+    		any(coords.max(0) > self.offset + self.shape * self.spacing)):
+    		raise IndexError('Coordinates are outside of the box')
 
     	voxels = np.vectorize(int)((coords-self.offset)/self.spacing)
-    	indeces = tuple(voxels.T)
-    	return indeces
+    	indices = tuple(voxels.T)
+    	return indices
 
