@@ -445,6 +445,7 @@ class OpenDX(Grid):
         if filename:
             self.parse(filename)
 
+
     def __add__(self, other):
         if not Grid.__add__(self, other):
             raise GridError('{0:s} and {1:s} cannot be added'
@@ -508,6 +509,7 @@ class OpenDX(Grid):
 
         self._origin += self.spacing
 
+
     def write(self, filename=None):
         """Write grid data into a file.
 
@@ -557,4 +559,24 @@ class OpenDX(Grid):
         opendx.write('\n{0:s}\n'.format(self._comments[1]))
         opendx.close()
         return filename
+
+
+    def indeces(self, coords):
+    	""" Takes a coordinate array of shape (n_atoms, 3) and
+    	returns the indeces of the voxels in self.array that would
+    	contain those coordinates.
+
+    	"""
+
+    	xmin,ymin,zmin = self.offset
+    	xmax,ymax,zmax = self.offset+(self.shape*self.spacing)
+    	for coord in coords:
+    		if (coord[0]<xmin or coord[0]>xmax or
+    			coord[1]<ymin or coord[1]>ymax or
+    			coord[2]<zmin or coord[2]>zmax):
+    			raise IndexError('Coordinate {0:s} is outside range of system'.format(coord))
+
+    	voxels = np.vectorize(int)((coords-self.offset)/self.spacing)
+    	indeces = tuple(voxels.T)
+    	return indeces
 
