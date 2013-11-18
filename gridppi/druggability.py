@@ -235,7 +235,8 @@ class Grid(object):
 
     def __getitem__(self, index):
     	"""Enable indexing of the Grid array"""
-    	if (type(index) == np.ndarray and len(index.shape) == 2 and
+
+    	if (type(index) == np.ndarray and index.ndim == 2 and
     		index.shape[1] == 3):
     		index = self.indices(index)
     	return self.array[index]
@@ -299,7 +300,7 @@ class Grid(object):
     	contain those coordinates.
 
     	"""
-    	
+
     	if (any(coords.min(0) < self.offset) or
     		any(coords.max(0) > self.offset + self.shape * self.spacing)):
     		raise IndexError('Coordinates are outside of the box')
