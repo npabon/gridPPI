@@ -236,7 +236,7 @@ class Grid(object):
     def __getitem__(self, index):
     	"""Enable indexing of the Grid array"""
 
-    	if (type(index) == np.ndarray and index.ndim == 2 and
+    	if (isinstance(index, np.ndarray) and index.ndim == 2 and
     		index.shape[1] == 3):
     		index = self.indices(index)
     	return self.array[index]
@@ -295,7 +295,7 @@ class Grid(object):
         pass
 
     def indices(self, coords):
-    	""" Takes a coordinate array of shape (n_atoms, 3) and
+    	"""Takes a coordinate array of shape (n_atoms, 3) and
     	returns the indices of the voxels in self.array that would
     	contain those coordinates.
 
