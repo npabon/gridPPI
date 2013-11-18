@@ -234,6 +234,12 @@ class Grid(object):
             return True
 
 
+    def __getitem__(self, index):
+    	"""Enable indexing of the Grid array"""
+    	if type(index) == np.ndarray and len(index.shape) == 2:
+
+
+
     def _smooth(self):
         """Smooth grid array by averaging over neighboring grid elements."""
         self.array = (self.array[0:-2, 0:-2, 0:-2] +
@@ -421,6 +427,7 @@ class XPLOR(Grid):
         xplor_file.close()
         return filename
 
+
 class OpenDX(Grid):
 
     """A class to manipulate OpenDX scalar data files.
@@ -434,7 +441,6 @@ class OpenDX(Grid):
 
     """
 
-
     def __init__(self, filename=None):
         """Instantiation arguments are passed to :class:`Grid`"""
         Grid.__init__(self, filename)
@@ -444,7 +450,6 @@ class OpenDX(Grid):
 
         if filename:
             self.parse(filename)
-
 
     def __add__(self, other):
         if not Grid.__add__(self, other):
@@ -462,7 +467,6 @@ class OpenDX(Grid):
         grid._comments = self._comments
         grid._origin = self._origin
         return grid
-
 
     def parse(self, filename):
         """Parse grid data from file."""
@@ -500,7 +504,6 @@ class OpenDX(Grid):
 
         self.state = 'original'
 
-
     def smooth(self):
         """Smooth grid and change grid attributes and state."""
         self._smooth()
@@ -508,7 +511,6 @@ class OpenDX(Grid):
         self.offset += self.spacing
 
         self._origin += self.spacing
-
 
     def write(self, filename=None):
         """Write grid data into a file.
@@ -560,7 +562,6 @@ class OpenDX(Grid):
         opendx.close()
         return filename
 
-
     def indices(self, coords):
     	""" Takes a coordinate array of shape (n_atoms, 3) and
     	returns the indices of the voxels in self.array that would
@@ -572,7 +573,7 @@ class OpenDX(Grid):
     		any(coords.max(0) > self.offset + self.shape * self.spacing)):
     		raise IndexError('Coordinates are outside of the box')
 
-    	voxels = np.vectorize(int)((coords-self.offset)/self.spacing)
+    	voxels = ((coords - self.offset) / self.spacing).astype(int)
     	indices = tuple(voxels.T)
     	return indices
 
