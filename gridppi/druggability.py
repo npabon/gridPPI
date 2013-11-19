@@ -233,13 +233,13 @@ class Grid(object):
         else:
             return True
 
-	def __getitem__(self, index):
-		"""Enable indexing of the Grid array"""
+    def __getitem__(self, index):
+        """Enable indexing of the Grid array"""
 
-		if (isinstance(index, np.ndarray) and index.ndim == 2 and
-			index.shape[1] == 3):
-			index = self.indices(index)
-		return self.array[index]
+        if (isinstance(index, np.ndarray) and index.ndim == 2 and
+            index.shape[1] == 3):
+            index = self.indices(index)
+        return self.array[index]
 
     def _smooth(self):
         """Smooth grid array by averaging over neighboring grid elements."""
@@ -293,21 +293,21 @@ class Grid(object):
 
         """
         pass
-	
-	def indices(self, coords):
-		"""Takes a coordinate array of shape (n_atoms, 3) and
-		returns the indices of the voxels in self.array that would
-		contain those coordinates.
 
-		"""
+    def indices(self, coords):
+        """Takes a coordinate array of shape (n_atoms, 3) and
+        returns the indices of the voxels in self.array that would
+        contain those coordinates.
 
-		if (any(coords.min(0) < self.offset) or
-			any(coords.max(0) > self.offset + self.shape * self.spacing)):
-		raise IndexError('Coordinates are outside of the box')
+        """
 
-		voxels = ((coords - self.offset) / self.spacing).astype(int)
-		indices = tuple(voxels.T)
-		return indices
+        if (any(coords.min(0) < self.offset) or
+            any(coords.max(0) > self.offset + self.shape * self.spacing)):
+        raise IndexError('Coordinates are outside of the box')
+
+        voxels = ((coords - self.offset) / self.spacing).astype(int)
+        indices = tuple(voxels.T)
+        return indices
 
 
 class XPLOR(Grid):
