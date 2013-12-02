@@ -303,7 +303,7 @@ class Grid(object):
 
         if (any(coords.min(0) < self.offset) or
             any(coords.max(0) > self.offset + self.shape * self.spacing)):
-        raise IndexError('Coordinates are outside of the box')
+            raise IndexError('Coordinates are outside of the box')
 
         voxels = ((coords - self.offset) / self.spacing).astype(int)
         indices = tuple(voxels.T)
