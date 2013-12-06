@@ -8,10 +8,10 @@ class Score(object):
     """Base class for handling grid files and scoring docked poses."""
 
     # atom selections for each grid type (refine later to select atoms)
-    grid_types = {'positive' : 'resname ARG HIS LYS', 
-                  'negative' : 'resname ASP GLU', 
-                  'polar' : 'resname SER THR ASN GLN',
-                  'hydrophobic' : 'resname ALA VAL ILE LEU MET PHE TYR TRP'}
+    grid_types = {'positive' : '(resname ARG HIS LYS) and sidechain and element N', 
+                  'negative' : '(resname ASP GLU) and sidechain and element O', 
+                  'polar' : '(resname SER THR ASN GLN) and sidechain and (element N O)',
+                  'hydrophobic' : '(resname ALA VAL ILE LEU MET PHE TYR TRP) and sidechain and (element C S N)'}
 
     def __init__(self, **kwargs):
         """Receptor grid files are taken as keyword arguments at instantiation. 
@@ -25,7 +25,12 @@ class Score(object):
     def scorePose(self, ligand, selection=None):
         """Method for scoring a docked pose.
 
-        Ligand atom selection should already be aligned to the receptor. 
+        Ligand atom selection should already be aligned to the receptor. It
+        should also contain only those atoms that are within the receptor 
+        grid.
+
+        Ex: ligand = ligand.select('within 4 of thing', thing = receptor)
+
         Optional input selection string is combined with each grid's default
         selection string.
 
@@ -36,20 +41,20 @@ class Score(object):
 
         score = 0
 
-        for gridfile in self.grids:
+        for grid_tag in self.grids:
             
             # get coordinates of appropriate atoms in ligand
-            selstr = Score.grid_types[gridfile]
+            selstr = Score.grid_types[grid_tag]
             lig_atoms = ligand.select(selstr)
             if selection:
                 lig_atoms = lig_atoms.select(selection)
-            lig_coords = lig_atoms.getCoords()
             
-            # sum values in sorresponding voxels
-            gridDX = grid.OpenDX(gridfile)
-            # * * the following line will throw an IndexError if any coords
-            # * * are outside of the grid  
-            lig_voxels = gridDX.indices(lig_coords)
-            score += sum(gridDX[lig_voxels])
+            if lig_atoms:
+                lig_coords = lig_atoms.getCoords()
+
+                # sum values in corresponding voxels
+                gridDX = grid.OpenDX(self.grids[grid_tag])
+                score += sum(gridDX[lig_coords])
+                print grid_tag, sum(gridDX[lig_coords])
 
         return score
