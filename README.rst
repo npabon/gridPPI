@@ -7,7 +7,7 @@ USAGE
 
 The 'score.py' module defines the base Score class that stores probe enrichment grids for a particular receptor and scores predicted poses of a ligand docking to that receptor. Score objects are instantiated with the receptor's probe grids that are to be used in scoring.
 
-Ex: :
+Ex::
   
   myScore = Score(polar='receptor_polar.dx', hydrophobic='receptor_hydrophobic.dx')
 
