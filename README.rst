@@ -7,14 +7,14 @@ USAGE
 
 The 'score.py' module defines the base Score class that stores probe enrichment grids for a particular receptor and scores predicted poses of a ligand docking to that receptor. Score objects are instantiated with the receptor's probe grids that are to be used in scoring.
 
-  Ex: 
+Ex: :
   
   myScore = Score(polar='receptor_polar.dx', hydrophobic='receptor_hydrophobic.dx')
 
 
 The 'scorePose' method is then used to score a ProDy atom selection representing the ligand in the docked pose. The ligand must be aligned to the receptor grids prior to scoring. The ligand atom selection must also only contain atoms that are within the bounds of the receptor enrichment grids.
 
-  Ex:
+Ex::
   
   r = parsePDB('receptor_heavyatoms.pdb')
   p = parsePDB('dock_1.pdb')
