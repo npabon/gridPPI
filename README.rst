@@ -3,7 +3,7 @@ Synopsis
 GridPPI is a Python module for comparative scoring of predicted protein docking poses. Docked poses are scored via mapping of the protein ligand interface residues to the receptor's probe enrichment grids. These enrichment grids are generated from a druggability simulation of the unbound receptor with probe molecules. Poses that place receptor residues in within the enriched regions of their correspondiong probe grids receive higher scores.
 
 
-USAGE
+Usage
 
 The 'score.py' module defines the base Score class that stores probe enrichment grids for a particular receptor and scores predicted poses of a ligand docking to that receptor. Score objects are instantiated with the receptor's probe grids that are to be used in scoring.
 
